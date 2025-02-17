@@ -28,6 +28,13 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private Color projectileColor;
     public Color ProjectileColor { get { return projectileColor; } }
 
+    private ProjectileManager projectileManager;
+    protected override void Start()
+    {
+        base.Start();
+        projectileManager = ProjectileManager.Instance;
+    }
+
     public override void Attack()
     {
         base.Attack();
@@ -48,8 +55,18 @@ public class RangeWeaponHandler : WeaponHandler
     }
     private void CreateProjectile(Vector2 _lookDirection, float angle)
     {
-
+        projectileManager.ShootBullet(
+            this,
+            projectileSpawnPosition.position,
+            RotateVector2(_lookDirection, angle)
+            );
     }
+    /// <summary>
+    /// v를 degree만큼 돌리는 함수
+    /// </summary>
+    /// <param name="v">돌릴 벡터</param>
+    /// <param name="degree">돌릴 각도</param>
+    /// <returns></returns>
     private static Vector2 RotateVector2(Vector2 v, float degree)
     {
         // v를 각도만큼 돌리기. 근데 교환법칙이 성립하지 않기 때문에 벡터 곱하기 쿼터니언은 안된다.
