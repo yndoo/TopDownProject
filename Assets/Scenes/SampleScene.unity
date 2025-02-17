@@ -896,6 +896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRenderer: {fileID: 1814184651}
   weaponPivot: {fileID: 288394678}
+  weaponPrefab: {fileID: 4208557303239943024, guid: 31737517183518b44abaf824fde8a4e7, type: 3}
 --- !u!114 &195698831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -934,6 +935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ba299344ff9744aac56b138c54326c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthChangeDelay: 0.5
 --- !u!1 &288394677
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,11 +22,27 @@ public class BaseController : MonoBehaviour
     protected AnimationHandler animationHandler;
     protected StatHandler statHandler;
 
+    [SerializeField] public WeaponHandler weaponPrefab;
+    protected WeaponHandler weaponHandler;
+
+    protected bool isAttacking;
+    private float timeSinceLastAttack = float.MaxValue;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         animationHandler = GetComponent<AnimationHandler>();
         statHandler = GetComponent<StatHandler>(); 
+
+        if(weaponPrefab != null)
+        {
+            weaponHandler = Instantiate(weaponPrefab, weaponPivot); // weaponPivot에 weaponPrefab을 복제해서 만들게 됨
+        }
+        else
+        {
+            // 이미 무기를 장착하고 있을 수 있으니까 찾아오는 코드 
+            weaponHandler = GetComponentInChildren<WeaponHandler>();
+        }
     }
 
     protected virtual void Start()
@@ -38,6 +54,7 @@ public class BaseController : MonoBehaviour
     {
         HandleAction();
         Rotate(lookDirection);
+        HandleAttacakDelay();
     }
     protected virtual void FixedUpdate()
     {
@@ -81,6 +98,8 @@ public class BaseController : MonoBehaviour
         {
             weaponPivot.rotation = Quaternion.Euler(0f, 0f, rotZ);
         }
+
+        weaponHandler?.Rotate(isLeft);
     }
 
     public void ApplyKnockback(Transform other, float power, float duration)
@@ -88,5 +107,31 @@ public class BaseController : MonoBehaviour
         knockbackDuration = duration;
         // A벡터 - B벡터 => B가 A를 바라보는 벡터가 나옴 => 방향과 거리 구할 수 있음. 여기서는 normalize로 방향만 가져옴. 그리고 마이너스!! 넉백이니까.
         knockback = -(other.position - transform.position).normalized * power;
+    }
+
+    /// <summary>
+    /// 일정 시간마다 발사할 수 있게 만들어주는 코드
+    /// </summary>
+    private void HandleAttacakDelay()
+    {
+        if (weaponHandler == null) return;
+
+        if(timeSinceLastAttack <= weaponHandler.Delay)
+        {
+            timeSinceLastAttack += Time.deltaTime;
+        }
+
+        if(isAttacking && timeSinceLastAttack > weaponHandler.Delay)
+        {
+            timeSinceLastAttack = 0;
+            Attack();
+        }
+    }
+    protected virtual void Attack()
+    {
+        if(lookDirection != Vector2.zero)
+        {
+            weaponHandler?.Attack();
+        }
     }
 }
