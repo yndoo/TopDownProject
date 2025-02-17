@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// StatHandler에 있는 값들은 정보. ex) Health가 실시간 체력이 아님.
+/// </summary>
 public class StatHandler : MonoBehaviour
 {
     // Range : min과 max로 값 제한할 수 있음
