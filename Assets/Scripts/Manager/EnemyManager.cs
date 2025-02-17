@@ -17,8 +17,20 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float timeBetweenSpawns = 0.2f;
     [SerializeField] private float timeBetweenWaves = 1f;
 
+    GameManager gameManager;
+    public void Init(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+    }
+
     public void StartWave(int waveCount)
     {
+        if(waveCount <= 0)
+        {
+            gameManager.EndOfWave();
+            return;
+        }
+
         if(waveRountine != null)
         {
             StopCoroutine(waveRountine);
@@ -35,6 +47,7 @@ public class EnemyManager : MonoBehaviour
     {
         enemySpawnComplete = false;
         yield return new WaitForSeconds(timeBetweenWaves);
+        Debug.Log("Spawn");
 
         for(int i = 0; i < waveCount; i++)
         {
@@ -63,7 +76,8 @@ public class EnemyManager : MonoBehaviour
 
         GameObject spawnEnemy = Instantiate(randomPrefab, new Vector3(randomPosition.x, randomPosition.y), Quaternion.identity);
         EnemyController enemyController = spawnEnemy.GetComponent<EnemyController>();
-        
+        enemyController.Init(this, gameManager.player.transform);
+
         activeEnemies.Add(enemyController);
     }
 
@@ -84,9 +98,18 @@ public class EnemyManager : MonoBehaviour
     private void Update()
     {
         // 테스트용
-        if(Input.GetKeyDown(KeyCode.Space))
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    StartWave(1);
+        //}
+    }
+
+    public void RemoveEnemyOnDeath(EnemyController enemy)
+    {
+        activeEnemies.Remove(enemy);
+        if(enemySpawnComplete && activeEnemies.Count == 0)
         {
-            StartWave(1);
+            gameManager.EndOfWave();
         }
     }
 }

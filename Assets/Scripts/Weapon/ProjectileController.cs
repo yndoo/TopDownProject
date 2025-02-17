@@ -51,6 +51,21 @@ public class ProjectileController : MonoBehaviour
         // target과 충돌했을 때
         else if (rangeWeaponHandler.target.value == (rangeWeaponHandler.target.value | (1 << collision.gameObject.layer)))
         {
+            // 데미지 처리
+            ResourceController resourceController = collision.GetComponent<ResourceController>();
+            if(resourceController != null)
+            {
+                resourceController.ChangeHealth(-rangeWeaponHandler.Power);
+                if(rangeWeaponHandler.IsOnKnockback)
+                {
+                    BaseController controller = collision.GetComponent<BaseController>();
+                    if(controller != null)
+                    {
+                        controller.ApplyKnockback(transform, rangeWeaponHandler.KnockbackPower, rangeWeaponHandler.KnockbackTime);
+                    }
+                }
+            }
+
             DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
         }
     }

@@ -134,4 +134,24 @@ public class BaseController : MonoBehaviour
             weaponHandler?.Attack();
         }
     }
+
+    public virtual void Death()
+    {
+        _rigidbody.velocity = Vector3.zero;
+
+        foreach(SpriteRenderer renderer in transform.GetComponentsInChildren<SpriteRenderer>()) // 캐릭터가 가진 모든 spriterenderer에 알파값 적용
+        {
+            Color color = renderer.color;
+            color.a = 0.3f;
+            renderer.color = color;
+        }
+
+        // Behaviour는 컴포넌트에 달려있음
+        foreach (Behaviour component in transform.GetComponentsInChildren<Behaviour>())
+        {
+            component.enabled = false;
+        }
+
+        Destroy(gameObject, 2f);
+    }
 }

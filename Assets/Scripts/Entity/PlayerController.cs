@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class PlayerController : BaseController
 {
     private Camera camera;
 
-    protected override void Start()
+    private GameManager gameManager;
+
+    public void Init(GameManager gameManager)
     {
-        base.Start();
+        this.gameManager = gameManager;
         camera = Camera.main;
     }
 
@@ -32,5 +35,11 @@ public class PlayerController : BaseController
         }
 
         isAttacking = Input.GetMouseButton(0);
+    }
+
+    public override void Death()
+    {
+        base.Death();
+        gameManager.GameOver();
     }
 }
