@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerController : BaseController
 {
@@ -17,15 +19,29 @@ public class PlayerController : BaseController
 
     protected override void HandleAction()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal"); // ProjectSettings > InputManager에 정의된 축들 사용 
-        float vertical = Input.GetAxisRaw("Vertical");
-        movementDirection = new Vector2(horizontal, vertical).normalized;
 
-        Vector2 mousePosition = Input.mousePosition;
+        
+    }
+
+    public override void Death()
+    {
+        base.Death();
+        gameManager.GameOver();
+    }
+
+    void OnMove(InputValue inputValue)
+    {
+        movementDirection = inputValue.Get<Vector2>();
+        movementDirection = movementDirection.normalized;
+    }
+
+    void OnLook(InputValue inputValue)
+    {
+        Vector2 mousePosition = inputValue.Get<Vector2>();
         Vector2 worldPos = camera.ScreenToWorldPoint(mousePosition); // 화면상 좌표를 우리가 원하는 월드좌표로 변환
         lookDirection = (worldPos - (Vector2)transform.position);
 
-        if(lookDirection.magnitude/*벡터의 크기*/ < 0.9f)
+        if (lookDirection.magnitude/*벡터의 크기*/ < 0.9f)
         {
             lookDirection = Vector2.zero;
         }
@@ -33,13 +49,11 @@ public class PlayerController : BaseController
         {
             lookDirection = lookDirection.normalized;
         }
-
-        isAttacking = Input.GetMouseButton(0);
     }
 
-    public override void Death()
+    void OnFire(InputValue inputValue)
     {
-        base.Death();
-        gameManager.GameOver();
+        if (EventSystem.current.IsPointerOverGameObject()) return; // UI에 마우스가 올라가있으면 공격체 쏘지 않게.
+        isAttacking = inputValue.isPressed;
     }
 }
