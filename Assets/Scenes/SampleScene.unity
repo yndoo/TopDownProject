@@ -2503,6 +2503,7 @@ GameObject:
   m_Component:
   - component: {fileID: 785052607}
   - component: {fileID: 785052606}
+  - component: {fileID: 785052608}
   m_Layer: 0
   m_Name: ProjectileManager
   m_TagString: Untagged
@@ -2542,6 +2543,21 @@ Transform:
   - {fileID: 824569063}
   m_Father: {fileID: 633723371}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &785052608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785052605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a6d0a657742cff4fb133db620fbd056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 108722290044220061, guid: c3ed3b06cac8bb745b9460f737e9ce69, type: 3}
+  - {fileID: 1388029659937003486, guid: fb2345fbbd2295f4ca952d68a1521e0d, type: 3}
 --- !u!1 &824569062
 GameObject:
   m_ObjectHideFlags: 0
