@@ -73,7 +73,7 @@ public class BaseController : MonoBehaviour
     }
     private void Movement(Vector2 direction)
     {
-        direction = direction * statHandler.Speed;
+        direction = direction * statHandler.GetStat(StatType.Speed);
         if(knockbackDuration > 0.0f) // 넉백 duration이 남아있다면 아직 적용해야 함
         {
             // 넉백을 적용해야한다면 기존 이동방향의 힘을 줄여주고 넉백의 힘을 넣어주겠다. 

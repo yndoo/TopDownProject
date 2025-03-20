@@ -17,7 +17,7 @@ public class ResourceController : MonoBehaviour
     private float timeSinceLastChange = float.MaxValue; // 변화를 가진 시간을 저장. 그래야 일정 시간 후에 다시 변화를 갖기 때문.
 
     public float CurrentHealth { get; private set; }
-    public float MaxHealth => statHandler.Health;
+    public float MaxHealth => statHandler.GetStat(StatType.Health);
 
     public AudioClip damageClip;
 
@@ -32,7 +32,7 @@ public class ResourceController : MonoBehaviour
 
     private void Start()
     {
-        CurrentHealth = statHandler.Health;
+        CurrentHealth = statHandler.GetStat(StatType.Health);
     }
 
     private void Update()

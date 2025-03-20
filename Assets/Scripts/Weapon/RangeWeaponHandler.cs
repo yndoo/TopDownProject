@@ -29,10 +29,13 @@ public class RangeWeaponHandler : WeaponHandler
     public Color ProjectileColor { get { return projectileColor; } }
 
     private ProjectileManager projectileManager;
+
+    private StatHandler statHandler;
     protected override void Start()
     {
         base.Start();
         projectileManager = ProjectileManager.Instance;
+        statHandler = GetComponentInParent<StatHandler>();
     }
 
     public override void Attack()
@@ -40,7 +43,7 @@ public class RangeWeaponHandler : WeaponHandler
         base.Attack();
 
         float projectileAngleSpace = multipleProjectileAngle;
-        int numberOfProjectilePerShot = numberofProjectilesPerShot;
+        int numberOfProjectilePerShot = numberofProjectilesPerShot + (int)statHandler.GetStat(StatType.ProjectileCount);
 
         // 최소치의 각을 구해서 거기서부터 탄을 쭉 쏠거임
         float minAngle = -(numberOfProjectilePerShot / 2f) * projectileAngleSpace; // 발사해야하는 최소 각도 

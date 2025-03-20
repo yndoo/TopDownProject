@@ -7,17 +7,42 @@ using UnityEngine;
 /// </summary>
 public class StatHandler : MonoBehaviour
 {
-    // Range : min과 max로 값 제한할 수 있음
-    [Range(1, 100)][SerializeField] private int health = 10;
-    public int Health
+    public StatData statData;
+    private Dictionary<StatType, float> currentStats = new Dictionary<StatType, float>();
+
+    private void Awake()
     {
-        get => health;
-        set => health = Mathf.Clamp(value, 0, 100);
+        InitializeStats();
     }
-    [Range(1f, 20f)][SerializeField] private float speed = 3;
-    public float Speed
+
+    private void InitializeStats()
     {
-        get => speed;
-        set => speed = Mathf.Clamp(value, 0, 20);
+        foreach (StatEntry entry in statData.stats)
+        {
+            currentStats[entry.statType] = entry.baseValue;
+        }
+    }
+
+    public float GetStat(StatType statType)
+    {
+        return currentStats.ContainsKey(statType) ? currentStats[statType] : 0f;
+    }
+
+    public void ModifyStat(StatType statType, float amount, bool isPermanent = true, float duration = 0)
+    {
+        if (!currentStats.ContainsKey(statType)) return;
+
+        currentStats[statType] += amount;
+
+        if(!isPermanent)
+        {
+            StartCoroutine(RemoveStatAfterDutation(statType, amount, duration));
+        }
+    }
+
+    private IEnumerator RemoveStatAfterDutation(StatType statType, float amount, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        currentStats[statType] -= amount;
     }
 }
