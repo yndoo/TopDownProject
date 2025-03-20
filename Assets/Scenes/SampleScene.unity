@@ -2004,6 +2004,16 @@ MonoBehaviour:
     y: -4.5
     width: 4
     height: 8
+  - serializedVersion: 2
+    x: 18
+    y: -4.5
+    width: 2
+    height: 8
+  - serializedVersion: 2
+    x: -5
+    y: -18
+    width: 10
+    height: 2
   gizmoColor: {r: 1, g: 0, b: 0, a: 0.3}
   timeBetweenSpawns: 0.2
   timeBetweenWaves: 1
@@ -2279,6 +2289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWaveIndex: 0
+  currentStageIndex: 0
 --- !u!1 &717448983
 GameObject:
   m_ObjectHideFlags: 0

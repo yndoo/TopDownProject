@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    private Coroutine waveRountine;
+    private Coroutine waveRoutine;
 
     [SerializeField] private List<GameObject> enemyPrefabs;
+    private Dictionary<string, GameObject> enemyPrefabsDict;
 
     [SerializeField] List<Rect> spawnAreas;
     [SerializeField] private Color gizmoColor = new Color(1, 0, 0, 0.3f);
@@ -21,6 +22,12 @@ public class EnemyManager : MonoBehaviour
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
+
+        enemyPrefabsDict = new Dictionary<string, GameObject>();
+        foreach(GameObject pref in enemyPrefabs)
+        {
+            enemyPrefabsDict[pref.name] = pref; // 이름별로 정리해두기
+        }
     }
 
     public void StartWave(int waveCount)
@@ -31,11 +38,11 @@ public class EnemyManager : MonoBehaviour
             return;
         }
 
-        if(waveRountine != null)
+        if(waveRoutine != null)
         {
-            StopCoroutine(waveRountine);
+            StopCoroutine(waveRoutine);
         }
-        waveRountine = StartCoroutine(SpawnWave(waveCount));
+        waveRoutine = StartCoroutine(SpawnWave(waveCount));
     }
 
     public void StopWave()
@@ -58,15 +65,22 @@ public class EnemyManager : MonoBehaviour
         enemySpawnComplete = true;
     }
 
-    private void SpawnRandomEnemy()
+    private void SpawnRandomEnemy(string prefabName = null)
     {
         if (enemyPrefabs.Count == 0 || spawnAreas.Count == 0)
         {
             Debug.LogWarning("Enemy prefabs 또는 Spawn Areas가 설정되지 않았습니다.");
             return;
         }
-
-        GameObject randomPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+        GameObject randomPrefab;
+        if (prefabName != null)
+        {
+            randomPrefab = enemyPrefabsDict[prefabName];
+        }
+        else
+        {
+            randomPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+        }
 
         Rect randomArea = spawnAreas[Random.Range(0, spawnAreas.Count)];
 
@@ -111,5 +125,42 @@ public class EnemyManager : MonoBehaviour
         {
             gameManager.EndOfWave();
         }
+    }
+
+    // 새로 만든 함수들 
+    public void StartStage(WaveData waveData)
+    {
+        if(waveRoutine != null)
+        {
+            StopCoroutine(waveRoutine);
+        }
+        waveRoutine = StartCoroutine(SpawnStart(waveData));
+    }
+
+    private IEnumerator SpawnStart(WaveData waveData)
+    {
+        enemySpawnComplete = false;
+        yield return new WaitForSeconds(timeBetweenWaves);
+
+        for(int i = 0; i < waveData.monsters.Length; i++)
+        {
+            yield return new WaitForSeconds(timeBetweenWaves);
+
+            MonsterSpawnData monsterSpawnData = waveData.monsters[i];
+            for (int j = 0; j < monsterSpawnData.spawnCount; j++)
+            {
+                SpawnRandomEnemy(monsterSpawnData.monsterType);
+            }
+        }
+
+        if(waveData.hasBoss)
+        {
+            yield return new WaitForSeconds(timeBetweenWaves);
+
+            gameManager.MainCameraShake();
+            SpawnRandomEnemy(waveData.bossType);
+        }
+
+        enemySpawnComplete = true;
     }
 }
