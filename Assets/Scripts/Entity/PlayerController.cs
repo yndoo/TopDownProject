@@ -56,4 +56,23 @@ public class PlayerController : BaseController
         if (EventSystem.current.IsPointerOverGameObject()) return; // UI에 마우스가 올라가있으면 공격체 쏘지 않게.
         isAttacking = inputValue.isPressed;
     }
+
+    public void UseItem(ItemData item)
+    {
+        foreach(StatEntry modifier in item.statModifiers)
+        {
+            statHandler.ModifyStat(modifier.statType, modifier.baseValue, !item.isTemporary /*내부에서 true면 일시생성임*/, modifier.baseValue);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.TryGetComponent<ItemHandler>(out ItemHandler handler))
+        {
+            if (handler.ItemData == null) return;
+
+            UseItem(handler.ItemData);
+            Destroy(handler.gameObject);
+        }
+    }
 }

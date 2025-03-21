@@ -17,6 +17,7 @@ public class CameraShake : MonoBehaviour
 
     public void ShakeCamera(float duration, float amplitude, float frequency)
     {
+        //Debug.Log("Ä«¼Î");
         if(shakeTimeRemaining > duration)
         {
             return;

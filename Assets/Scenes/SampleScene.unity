@@ -1919,7 +1919,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00020572022, y: -0.012019999, z: -10}
+  m_LocalPosition: {x: -0.00021147044, y: -0.01203, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2016,6 +2016,9 @@ MonoBehaviour:
   gizmoColor: {r: 1, g: 0, b: 0, a: 0.3}
   timeBetweenSpawns: 0.2
   timeBetweenWaves: 1
+  itemPrefabs:
+  - {fileID: 2718977523308035863, guid: bf8a5e7ae39c46846b0c06d510f158b5, type: 3}
+  - {fileID: 6128781531826021747, guid: 48a745a5b98bc1b409e8df75849a0edb, type: 3}
 --- !u!4 &602765395
 Transform:
   m_ObjectHideFlags: 0
